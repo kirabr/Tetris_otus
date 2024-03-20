@@ -10,10 +10,7 @@ namespace Tetris
     {
         static void Main(string[] args)
         {
-            Point point = new Point();
-            point.x = 3;
-            point.y = 7;
-            point.c = '*';
+            Point point = new Point(3,7,'*');
             point.Draw();
 
             Console.ReadLine();
