@@ -10,13 +10,14 @@ namespace Tetris
     {
         static void Main(string[] args)
         {
-            Console.SetWindowSize(40, 30);
-            Console.SetBufferSize(40, 30);
-
-            Console.SetCursorPosition(4,8);
-            Console.Write('*');
+            Point point = new Point();
+            point.x = 3;
+            point.y = 7;
+            point.c = '*';
+            point.Draw();
 
             Console.ReadLine();
+
         }
     }
 }
