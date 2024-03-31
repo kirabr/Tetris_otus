@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Dynamic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -13,6 +14,42 @@ namespace Tetris
         protected char sym;
         protected Point[] points = new Point[4];
 
+        public int Top
+        {
+            get 
+            { 
+                int min_y = points[0].y;
+                for (int i = 1; i < points.Length; min_y = Math.Min(min_y, points[i].y), i++);
+                return min_y;
+            }
+        }
+        public int Bottom
+        {
+            get
+            {
+                int max_y = points[0].y;
+                for (int i = 1; i < points.Length; max_y = Math.Max(max_y, points[i].y), i++) ;
+                return max_y;
+            }
+        }
+        public int Left
+        {
+            get
+            {
+                int min_x = points[0].x;
+                for (int i = 1; i < points.Length; min_x = Math.Min(min_x, points[i].x), i++) ;
+                return min_x;
+            }
+        }
+        public int Right
+        {
+            get
+            {
+                int max_x = points[0].x;
+                for (int i = 1; i < points.Length; max_x = Math.Max(max_x, points[i].x), i++) ;
+                return max_x;
+            }
+        }
 
         protected Figure() { }
 
@@ -45,6 +82,7 @@ namespace Tetris
 
         public void Move(MoveDirection moveDirection)
         {
+            
             // "стираем" прежнее положение фигуры
             foreach (Point p in points)
             {
@@ -85,21 +123,21 @@ namespace Tetris
             // отрисовываем фигуру
             Draw();
 
+            Console.SetCursorPosition(0, 0);
+
         }
 
         public virtual void Rotate(RotateDirection rotateDirection)
         {
             // "стираем" прежнее положение фигуры
             // готовим данные для поворота фигуры - определяем минимальные и максимальные координаты x, y
-            int xmin = points[0].x, xmax = points[0].x, ymin = points[0].y, ymax = points[0].y;
+            int xmax = points[0].x, ymax = points[0].y;
             foreach (Point p in points)
             {
                 p.c = ' ';
                 p.Draw();
 
-                //xmin = Math.Min(xmin, p.x);
                 xmax = Math.Max(xmax, p.x);
-                //ymin = Math.Min(ymin, p.y);
                 ymax = Math.Max(ymax, p.y);
             }
 
