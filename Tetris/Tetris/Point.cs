@@ -8,21 +8,21 @@ namespace Tetris
 {
     class Point
     {
-        public int x;
-        public int y;
-        public char c;
+        public int X { get; set; }
+        public int Y { get; set; }
+        public char C { get; set; }
 
         public void Draw()
         {
-            Console.SetCursorPosition(x, y);
-            Console.Write(c);
+            Console.SetCursorPosition(X, Y);
+            Console.Write(C);
         }
 
         public Point(int a, int b, char symb) 
         {
-            x = a; 
-            y = b; 
-            c = symb;
+            X = a; 
+            Y = b; 
+            C = symb;
         }
     }
 }

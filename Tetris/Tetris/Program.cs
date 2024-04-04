@@ -13,20 +13,12 @@ namespace Tetris
         static void Main(string[] args)
         {
 
-            Console.SetWindowSize(30, 40);
-            Figure figure1 = new Stick(5, 15, '*');
-            figure1.Draw();
-            while (true)
-            {
-                if (Console.KeyAvailable)
-                {
-                    MoveFigureByKey(figure1);
-                }
-            }
+            Field.With = 20;
+            Field.Heigt = 25;
 
             for (int i = 0; i < 15; i++)
             {
-                FigureGenerator fg = new FigureGenerator(20, 2, '*');
+                FigureGenerator fg = new FigureGenerator(Field.With / 2, 1, '*');
                 Figure figure = fg.GenerateFigure();
 
                 figure.Draw();
@@ -37,9 +29,12 @@ namespace Tetris
                     if (Console.KeyAvailable)
                     {
                         MoveFigureByKey(figure);
+                        Thread.Sleep(200);
                     }
                     Thread.Sleep(200);
                 }
+
+                Field.FinishFigure(figure);
 
                 Thread.Sleep(200);
             }
@@ -68,11 +63,11 @@ namespace Tetris
                 case ConsoleKey.Enter:
                     break;
                 case ConsoleKey.UpArrow:
-                    if (RotateAvailable(figure))
+                    if (RotateAvailable(figure, RotateDirection.ClockWise))
                         figure.Rotate(RotateDirection.ClockWise);
                     break;
                 case ConsoleKey.Spacebar:
-                    if (RotateAvailable(figure))
+                    if (RotateAvailable(figure, RotateDirection.CounterClockWise))
                         figure.Rotate(RotateDirection.CounterClockWise);
                     break;
                 default:
@@ -85,28 +80,71 @@ namespace Tetris
             switch (direction)
             {
                 case MoveDirection.Left:
-                    return figure.Left > Console.WindowLeft + 1;
+                    return !FigureStrike(figure, Strike.Left);
                 case MoveDirection.Right:
-                    return figure.Right < Console.WindowWidth - 1;
+                    return !FigureStrike(figure, Strike.Right);
                 case MoveDirection.Down:
-                    return figure.Bottom < Console.WindowHeight - 1;
+                    return !FigureStrike(figure, Strike.Bottom);
             }
             return false;
         }
 
-        static bool RotateAvailable(Figure figure)
+        static bool RotateAvailable(Figure figure, RotateDirection rotateDirection)
         {
 
-            // если ширина фигуры не меньше её высоты, то повернуть гарантировано можно
-            if (figure.Right - figure.Left >= figure.Bottom - figure.Top)
+            Figure clone = new SpiritFigure(figure);
+            clone.RotateFigurePoints(rotateDirection, clone.Points);
+            foreach(Point p in clone.Points)
+            {
+                if (Field.HeapPointBusy(p.X, p.Y))
+                    return false;
+                if (p.X < 0 || p.X >= Field.With)
+                    return false;
+                if (p.Y >= Field.Heigt)
+                    return false;
+            }
+
+            return true;
+            
+            //int wight = figure.Right - figure.Left + 1;
+            //int height = figure.Bottom - figure.Top + 1;
+
+
+            //return true;
+
+            /*// Если ширина фигуры равна высоте, то вращение бессмысленно, вернём Ложь
+            if (wight == height)
+                return false;
+
+            // Если фигура расположена вертикально - ширина фигуры не меньше её высоты, то повернуть гарантировано можно
+            if (height > wight)
                 return true;
 
             // если от стенки до противоположного края фигуры - половина или менее её максимального размера,
             // то повернуть не удастся
             float lenght = figure.Bottom - figure.Top + 1;
             int distance = Math.Min(figure.Right - Console.WindowLeft, (Console.WindowWidth - 1) - figure.Left);
-            return distance > lenght / 2;
+            return distance > lenght / 2;*/
 
+        }
+    
+        static bool FigureStrike(Figure figure, Strike strike)
+        {
+            int left = figure.Left;
+            int right = figure.Right;
+            int bottom = figure.Bottom;
+            
+            foreach(Point p in figure.Points)
+            {
+                if (strike == Strike.Left && p.X==left && (p.X == 0 || Field.HeapPointBusy(p.X-1,p.Y)))
+                    return true;
+                if (strike == Strike.Right && p.X == right && (p.X == Field.With-1 || Field.HeapPointBusy(p.X + 1, p.Y)))
+                    return true;
+                if (strike == Strike.Bottom && p.Y == bottom && (p.Y == Field.Heigt-1 || Field.HeapPointBusy(p.X, p.Y+1)))
+                    return true;
+            }
+
+            return false;
         }
     }
 }

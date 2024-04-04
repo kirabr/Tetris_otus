@@ -6,8 +6,8 @@ using System.Threading.Tasks;
 
 namespace Tetris
 {
-    enum RotateDirection
+    internal enum Strike
     {
-        ClockWise = 1, CounterClockWise = -1
+        None, Left, Right, Bottom
     }
 }

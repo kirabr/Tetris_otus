@@ -15,10 +15,10 @@ namespace Tetris
         
         public override void SetPoints()
         {
-            points[0] = new Point(x, y, sym);
-            points[1] = new Point(x+1, y, sym);
-            points[2] = new Point(x,y+1, sym);
-            points[3] = new Point(x+1,y+1, sym);
+            points[0] = new Point(X, Y, Sym);
+            points[1] = new Point(X+1, Y, Sym);
+            points[2] = new Point(X,Y+1, Sym);
+            points[3] = new Point(X+1,Y+1, Sym);
         }
 
         public override void Rotate(RotateDirection rotateDirection) { }
