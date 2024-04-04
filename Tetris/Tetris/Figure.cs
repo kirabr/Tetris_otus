@@ -13,7 +13,7 @@ namespace Tetris
         // поворот фигуры от исходного положения по часовой стрелке
         // 0 - нет поворота, 1 - на 90 градусов, 2 - 180, 3 - на 270
         protected sbyte _r;
-        
+
         protected int X { get; set; }
         protected int Y { get; set; }
         // см. _r
@@ -81,14 +81,14 @@ namespace Tetris
             switch (rotation)
             {
                 case 1:
-                    Rotate(RotateDirection.ClockWise); 
+                    Rotate(RotateDirection.ClockWise);
                     break;
                 case 2:
-                    Rotate(RotateDirection.ClockWise); 
-                    Rotate(RotateDirection.ClockWise); 
+                    Rotate(RotateDirection.ClockWise);
+                    Rotate(RotateDirection.ClockWise);
                     break;
                 case 3:
-                    Rotate(RotateDirection.CounterClockWise); 
+                    Rotate(RotateDirection.CounterClockWise);
                     break;
             }
 
@@ -96,13 +96,24 @@ namespace Tetris
 
         protected Figure(Figure figure) { }
 
-        public virtual void SetPoints() { }
+        public abstract void SetPoints();
 
         public void Draw()
         {
             foreach (Point p in points)
             {
                 p.Draw();
+            }
+        }
+
+        public void Hide()
+        {
+            // "стираем" прежнее положение фигуры
+            foreach (Point p in points)
+            {
+                p.C = ' ';
+                p.Draw();
+
             }
         }
 
@@ -165,17 +176,6 @@ namespace Tetris
 
         }
 
-        public void Hide()
-        {
-            // "стираем" прежнее положение фигуры
-            foreach (Point p in points)
-            {
-                p.C = ' ';
-                p.Draw();
-
-            }
-        }
-
         public void RotateFigurePoints(RotateDirection rotateDirection, Point[] points)
         {
             // определяем новое положение фигуры:
@@ -212,7 +212,7 @@ namespace Tetris
                     {
                         for (int y_matrix = 0; y_matrix < matrix_dim; y_matrix++)
                         {
-                            if (matrix[matrix_dim-1 - x_matrix, y_matrix] == 0)
+                            if (matrix[matrix_dim - 1 - x_matrix, y_matrix] == 0)
                                 continue;
 
                             points[pointIndex].X = 3 - x_matrix + X;
@@ -230,7 +230,7 @@ namespace Tetris
                     {
                         for (int y_matrix = 0; y_matrix < matrix_dim; y_matrix++)
                         {
-                            if (matrix[x_matrix, matrix_dim-1 - y_matrix] == 0)
+                            if (matrix[x_matrix, matrix_dim - 1 - y_matrix] == 0)
                                 continue;
 
                             points[pointIndex].X = x_matrix + X;

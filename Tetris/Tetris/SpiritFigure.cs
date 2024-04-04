@@ -29,5 +29,10 @@ namespace Tetris
         {
             Sym = ' ';
         }
+
+        public override void SetPoints()
+        {
+            throw new NotImplementedException();
+        }
     }
 }

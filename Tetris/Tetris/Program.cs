@@ -100,31 +100,11 @@ namespace Tetris
                     return false;
                 if (p.X < 0 || p.X >= Field.With)
                     return false;
-                if (p.Y >= Field.Heigt)
+                if (p.Y >= Field.Heigt-1)
                     return false;
             }
 
             return true;
-            
-            //int wight = figure.Right - figure.Left + 1;
-            //int height = figure.Bottom - figure.Top + 1;
-
-
-            //return true;
-
-            /*// Если ширина фигуры равна высоте, то вращение бессмысленно, вернём Ложь
-            if (wight == height)
-                return false;
-
-            // Если фигура расположена вертикально - ширина фигуры не меньше её высоты, то повернуть гарантировано можно
-            if (height > wight)
-                return true;
-
-            // если от стенки до противоположного края фигуры - половина или менее её максимального размера,
-            // то повернуть не удастся
-            float lenght = figure.Bottom - figure.Top + 1;
-            int distance = Math.Min(figure.Right - Console.WindowLeft, (Console.WindowWidth - 1) - figure.Left);
-            return distance > lenght / 2;*/
 
         }
     
