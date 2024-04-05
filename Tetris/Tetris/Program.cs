@@ -16,7 +16,18 @@ namespace Tetris
             Field.With = 20;
             Field.Heigt = 25;
 
-            for (int i = 0; i < 15; i++)
+
+            Figure figure = new T(17, 3, '*');
+            figure.Draw();
+            while (true)
+            {
+                if (Console.KeyAvailable)
+                {
+                    MoveFigureByKey(figure);
+                }
+            }
+
+            /*for (int i = 0; i < 15; i++)
             {
                 FigureGenerator fg = new FigureGenerator(Field.With / 2, 1, '*');
                 Figure figure = fg.GenerateFigure();
@@ -31,13 +42,14 @@ namespace Tetris
                         MoveFigureByKey(figure);
                         Thread.Sleep(200);
                     }
+
                     Thread.Sleep(200);
                 }
 
                 Field.FinishFigure(figure);
 
                 Thread.Sleep(200);
-            }
+            }*/
 
             Console.ReadLine();
         }
@@ -100,7 +112,7 @@ namespace Tetris
                     return false;
                 if (p.X < 0 || p.X >= Field.With)
                     return false;
-                if (p.Y >= Field.Heigt-1)
+                if (p.Y >= Field.Heigt)
                     return false;
             }
 

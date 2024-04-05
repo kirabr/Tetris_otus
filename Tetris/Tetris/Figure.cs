@@ -94,7 +94,15 @@ namespace Tetris
 
         }
 
-        protected Figure(Figure figure) { }
+        protected Figure(Figure figure)
+        {
+            this.X = figure.X;
+            this.Y = figure.Y;
+            foreach (Point p in figure.Points)
+            {
+                Points[Array.IndexOf(figure.Points, p)] = new Point(p.X, p.Y, ' ');
+            }
+        }
 
         public abstract void SetPoints();
 
@@ -189,6 +197,7 @@ namespace Tetris
             int matrix_dim = Math.Max(lenght, height);
 
             int[,] matrix = new int[matrix_dim, matrix_dim];
+            int[,] resultMatrix = new int[matrix_dim, matrix_dim];
 
             int x_shift = matrix_dim - lenght;
             int y_shift = matrix_dim - height;
@@ -205,44 +214,38 @@ namespace Tetris
 
             int pointIndex = 0;
 
-            switch (rotateDirection)
+            for (int x_matrix = 0; x_matrix < matrix_dim; x_matrix++)
             {
-                case RotateDirection.ClockWise:
-                    for (int x_matrix = 0; x_matrix < matrix_dim; x_matrix++)
+                for (int y_matrix = 0; y_matrix < matrix_dim; y_matrix++)
+                {
+                    switch (rotateDirection)
                     {
-                        for (int y_matrix = 0; y_matrix < matrix_dim; y_matrix++)
-                        {
-                            if (matrix[matrix_dim - 1 - x_matrix, y_matrix] == 0)
-                                continue;
-
-                            points[pointIndex].X = 3 - x_matrix + X;
-                            points[pointIndex].Y = y_matrix + Y;
-                            points[pointIndex].C = Sym;
-
-                            pointIndex++;
-
-                        }
+                        case RotateDirection.ClockWise:
+                            resultMatrix[y_matrix, matrix_dim - 1 - x_matrix] = matrix[x_matrix, y_matrix];
+                           break;
+                        case RotateDirection.CounterClockWise:
+                            resultMatrix[matrix_dim - 1 - y_matrix, x_matrix] = matrix[x_matrix, y_matrix];
+                            break;
                     }
-                    break;
-
-                case RotateDirection.CounterClockWise:
-                    for (int x_matrix = 0; x_matrix < matrix_dim; x_matrix++)
-                    {
-                        for (int y_matrix = 0; y_matrix < matrix_dim; y_matrix++)
-                        {
-                            if (matrix[x_matrix, matrix_dim - 1 - y_matrix] == 0)
-                                continue;
-
-                            points[pointIndex].X = x_matrix + X;
-                            points[pointIndex].Y = 3 - y_matrix + Y;
-                            points[pointIndex].C = Sym;
-
-                            pointIndex++;
-
-                        }
-                    }
-                    break;
+                }
             }
+
+            for (int x_matrix = 0; x_matrix < matrix_dim; x_matrix++)
+            {
+                for (int y_matrix = 0; y_matrix < matrix_dim; y_matrix++)
+                {
+                    if (resultMatrix[x_matrix, y_matrix] == 1)
+                    {
+                        Point point = points[pointIndex];
+                        point.X = y_matrix + X;
+                        point.Y = x_matrix + Y;
+                        point.C = Sym;
+
+                        pointIndex++;
+                    }
+                }
+            }
+
         }
     }
 }

@@ -12,13 +12,7 @@ namespace Tetris
         {
         }
 
-        public SpiritFigure(Figure figure) : base(figure)
-        {
-            foreach(Point p in figure.Points)
-            {
-                Points[Array.IndexOf(figure.Points, p)] = new Point(p.X, p.Y, ' ');
-            }
-        }
+        public SpiritFigure(Figure figure) : base(figure) {}
 
         public SpiritFigure(int a, int b, char c) : base(a, b, c)
         {
