@@ -18,7 +18,7 @@ namespace Tetris
         protected int Y { get; set; }
         // см. _r
         protected byte R { get { return (byte)_r; } }
-        protected char Sym { get; set; }
+        public char Sym { get; set; }
         protected Point[] points = new Point[4];
 
         public int Top
@@ -105,6 +105,21 @@ namespace Tetris
         }
 
         public abstract void SetPoints();
+
+        public void SetPoints(Point[] points)
+        {
+            foreach (Point p in points)
+            {
+                this.points[Array.IndexOf(points, p)] = p;
+            }
+        }
+
+        public void Transpose(Point[] points)
+        {
+            Hide();
+            SetPoints(points);
+            Draw();
+        }
 
         public void Draw()
         {

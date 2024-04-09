@@ -75,12 +75,13 @@ namespace Tetris
                 case ConsoleKey.Enter:
                     break;
                 case ConsoleKey.UpArrow:
-                    if (RotateAvailable(figure, RotateDirection.ClockWise))
-                        figure.Rotate(RotateDirection.ClockWise);
+                    Point[] rotatedPoints;
+                    if (RotateAvailable(figure, RotateDirection.CounterClockWise, out rotatedPoints))
+                        figure.Transpose(rotatedPoints);
                     break;
                 case ConsoleKey.Spacebar:
-                    if (RotateAvailable(figure, RotateDirection.CounterClockWise))
-                        figure.Rotate(RotateDirection.CounterClockWise);
+                    if (RotateAvailable(figure, RotateDirection.ClockWise, out rotatedPoints))
+                        figure.Transpose(rotatedPoints);
                     break;
                 default:
                     break;
@@ -101,38 +102,46 @@ namespace Tetris
             return false;
         }
 
-        static bool RotateAvailable(Figure figure, RotateDirection rotateDirection)
+        static bool RotateAvailable(Figure figure, RotateDirection rotateDirection, out Point[] points)
         {
+
+            points = new Point[4];
 
             Figure clone = new SpiritFigure(figure);
             clone.RotateFigurePoints(rotateDirection, clone.Points);
-            foreach(Point p in clone.Points)
+
+            bool result = true;
+
+            foreach (Point p in clone.Points)
             {
+
+                points[Array.IndexOf(clone.Points, p)] = new Point(p.X, p.Y, figure.Sym);
+
                 if (Field.HeapPointBusy(p.X, p.Y))
-                    return false;
+                    result = false;
                 if (p.X < 0 || p.X >= Field.With)
-                    return false;
+                    result = false;
                 if (p.Y >= Field.Heigt)
-                    return false;
+                    result = false;
             }
 
-            return true;
+            return result;
 
         }
-    
+
         static bool FigureStrike(Figure figure, Strike strike)
         {
             int left = figure.Left;
             int right = figure.Right;
             int bottom = figure.Bottom;
-            
-            foreach(Point p in figure.Points)
+
+            foreach (Point p in figure.Points)
             {
-                if (strike == Strike.Left && p.X==left && (p.X == 0 || Field.HeapPointBusy(p.X-1,p.Y)))
+                if (strike == Strike.Left && p.X == left && (p.X == 0 || Field.HeapPointBusy(p.X - 1, p.Y)))
                     return true;
-                if (strike == Strike.Right && p.X == right && (p.X == Field.With-1 || Field.HeapPointBusy(p.X + 1, p.Y)))
+                if (strike == Strike.Right && p.X == right && (p.X == Field.With - 1 || Field.HeapPointBusy(p.X + 1, p.Y)))
                     return true;
-                if (strike == Strike.Bottom && p.Y == bottom && (p.Y == Field.Heigt-1 || Field.HeapPointBusy(p.X, p.Y+1)))
+                if (strike == Strike.Bottom && p.Y == bottom && (p.Y == Field.Heigt - 1 || Field.HeapPointBusy(p.X, p.Y + 1)))
                     return true;
             }
 
