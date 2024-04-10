@@ -21,7 +21,8 @@ namespace Tetris
             }
             set
             {
-                _wight = value;
+                _wight = Math.Max(value, 1);
+                SetHeap();
                 SetConsoleParametres();
             }
         }
@@ -33,9 +34,15 @@ namespace Tetris
             }
             set
             {
-                _height = value;
+                _height = Math.Max(value, 1);
+                SetHeap();
                 SetConsoleParametres();
             }
+        }
+
+        private static void SetHeap()
+        {
+            _heap = new bool[_height, _wight];
         }
 
         private static void SetConsoleParametres()
@@ -78,25 +85,28 @@ namespace Tetris
                 // если строка полностью заполнена, то сдвигаем на неё строки сверху
                 if (rowfill)
                 {
-                    DropRow(y);
+                    DropRows(y);
                     needReDraw = true;
-                }
-
-                // Перерисовываем поле, если сдвигали строки
-                if (needReDraw)
-                {
-                    Draw();
                 }
 
             }
 
+            // Перерисовываем поле, если сдвигали строки
+            if (needReDraw)
+            {
+                Draw();
+            }
+
         }
 
-        private static void DropRow(int y)
+        private static void DropRows(int bottom)
         {
-            for (int x = 0; x <= _wight; x++)
+            for (int y = bottom; y > 0; y--)
             {
-                _heap[x, y] = _heap[x, y - 1];
+                for (int x = 0; x < _wight; x++)
+                {
+                    _heap[y, x] = _heap[y - 1, x];
+                }
             }
         }
 
@@ -110,6 +120,7 @@ namespace Tetris
                     Console.SetCursorPosition(x, y);
                     Console.Write(sym);
                 }
+
             }
         }
     }

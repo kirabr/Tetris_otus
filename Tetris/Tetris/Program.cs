@@ -14,43 +14,41 @@ namespace Tetris
         {
 
             Field.With = 20;
-            Field.Heigt = 25;
+            Field.Heigt = 20;
 
+            bool canDrop = false;
 
-            Figure figure = new T(17, 3, '*');
-            figure.Draw();
-            while (true)
+            do
             {
-                if (Console.KeyAvailable)
-                {
-                    MoveFigureByKey(figure);
-                }
-            }
 
-            /*for (int i = 0; i < 15; i++)
-            {
                 FigureGenerator fg = new FigureGenerator(Field.With / 2, 1, '*');
                 Figure figure = fg.GenerateFigure();
 
-                figure.Draw();
+                canDrop = false;
 
                 while (ManeuverAvailable(figure, MoveDirection.Down))
                 {
+
+                    canDrop = true;
+                    
                     figure.Move(MoveDirection.Down);
-                    if (Console.KeyAvailable)
+
+                    while (Console.KeyAvailable)
                     {
                         MoveFigureByKey(figure);
-                        Thread.Sleep(200);
+                        Thread.Sleep(100);
                     }
-
-                    Thread.Sleep(200);
+                    
+                    Thread.Sleep(400);
                 }
 
                 Field.FinishFigure(figure);
+                Field.ClearDropFulfillmentStrings();
 
-                Thread.Sleep(200);
-            }*/
+            } while (canDrop);
 
+            Console.SetCursorPosition(0, 0);
+            Console.WriteLine("Game over");
             Console.ReadLine();
         }
 
