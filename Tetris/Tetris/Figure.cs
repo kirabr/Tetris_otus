@@ -114,6 +114,21 @@ namespace Tetris
             }
         }
 
+        public string Snapsot()
+        {
+            string snapshot = $"Figure: {GetType().Name}";
+
+            snapshot += "\n\n" + $"X: {X}, Y: {Y}, Top: {Top}, Bottom: {Bottom}, Left: {Left}, Right: {Right}";
+
+            snapshot += "\n\n Points:";
+            foreach(Point p in this.Points)
+            {
+                snapshot += $"[{Array.IndexOf(this.Points, p)}]: X: {p.X}, Y: {p.Y}";
+            }
+
+            return snapshot;
+        }
+
         public void Transpose(Point[] points)
         {
             Hide();

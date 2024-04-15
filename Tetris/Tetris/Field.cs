@@ -13,6 +13,23 @@ namespace Tetris
         static private int _height = 40;
         static private bool[,] _heap = new bool[_height, _wight];
 
+        public static string Snapshot()
+        {
+            string snapshot = "Field snapshot";
+
+            snapshot += "\n\n" + DateTime.Now.ToString() + "\n\n";
+            for (int y = 0; y < _wight; y++)
+            {
+                for (int x = 0; x<_height; x++)
+                {
+                    snapshot += HeapPointBusy(x, y) ? "*" : " ";
+                }
+                snapshot += "\n";
+            }
+
+            return snapshot;
+        }
+
         public static int With
         {
             get
@@ -61,7 +78,7 @@ namespace Tetris
 
         public static bool HeapPointBusy(int x, int y)
         {
-            return _heap[y, x];
+            return x < With && y<Heigt && _heap[y, x];
         }
 
         public static void ClearDropFulfillmentStrings()

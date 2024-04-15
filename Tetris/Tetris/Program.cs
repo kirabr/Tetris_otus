@@ -1,55 +1,76 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Runtime.Remoting;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Timers;
 
 namespace Tetris
 {
     internal class Program
     {
+
+        readonly static FigureGenerator fg = new FigureGenerator(Field.With / 2, 1, '*');
+        static Figure figure = fg.GenerateFigure();
+        static System.Timers.Timer timer = new System.Timers.Timer(400);
+
         static void Main(string[] args)
         {
 
             Field.With = 20;
             Field.Heigt = 20;
 
-            bool canDrop = false;
+            timer.Elapsed += OnDropTimerEvent;
+            timer.Enabled = true;
 
             do
             {
-
-                FigureGenerator fg = new FigureGenerator(Field.With / 2, 1, '*');
-                Figure figure = fg.GenerateFigure();
-
-                canDrop = false;
-
-                while (ManeuverAvailable(figure, MoveDirection.Down))
+                while (Console.KeyAvailable)
                 {
-
-                    canDrop = true;
-                    
-                    figure.Move(MoveDirection.Down);
-
-                    while (Console.KeyAvailable)
-                    {
-                        MoveFigureByKey(figure);
-                        Thread.Sleep(100);
-                    }
-                    
-                    Thread.Sleep(400);
+                    MoveFigureByKey(figure);
                 }
 
+            } while (true);
+
+        }
+
+        private static void Log()
+        {
+            using (StreamWriter sw = new StreamWriter("D:\\Kirill\\OTUS\\CS Beginer\\Tetris\\log.txt", true))
+            {
+                sw.WriteLine(figure.Snapsot());
+                sw.WriteLine(Field.Snapshot());
+            }
+        }
+
+        private static void OnDropTimerEvent(object sender, EventArgs e)
+        {
+            if (ManeuverAvailable(figure, MoveDirection.Down))
+            {
+                figure.Move(MoveDirection.Down);
+            }
+            else
+            {
                 Field.FinishFigure(figure);
                 Field.ClearDropFulfillmentStrings();
+                figure = fg.GenerateFigure();
 
-            } while (canDrop);
+                if (!ManeuverAvailable(figure, MoveDirection.Down))
+                {
+                    timer.Enabled = false;
+                    timer.Dispose();
 
-            Console.SetCursorPosition(0, 0);
-            Console.WriteLine("Game over");
-            Console.ReadLine();
+                    Console.SetCursorPosition(0, 0);
+                    Console.WriteLine("Game over");
+                    Console.ReadLine();
+
+                }
+
+            }
+
         }
 
         static void MoveFigureByKey(Figure figure)
