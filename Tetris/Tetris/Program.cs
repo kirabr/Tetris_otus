@@ -15,7 +15,8 @@ namespace Tetris
 
         readonly static FigureGenerator fg = new FigureGenerator(Field.With / 2, 1, '*');
         static Figure figure = fg.GenerateFigure();
-        static System.Timers.Timer timer = new System.Timers.Timer(400);
+        static readonly System.Timers.Timer timer = new System.Timers.Timer(400);
+        private static readonly Object _lockObject = new Object();
 
         static void Main(string[] args)
         {
@@ -30,7 +31,9 @@ namespace Tetris
             {
                 while (Console.KeyAvailable)
                 {
+                    Monitor.Enter(_lockObject);
                     MoveFigureByKey(figure);
+                    Monitor.Exit(_lockObject);
                 }
 
             } while (true);
@@ -48,6 +51,7 @@ namespace Tetris
 
         private static void OnDropTimerEvent(object sender, EventArgs e)
         {
+            Monitor.Enter(_lockObject);
             if (ManeuverAvailable(figure, MoveDirection.Down))
             {
                 figure.Move(MoveDirection.Down);
@@ -70,6 +74,7 @@ namespace Tetris
                 }
 
             }
+            Monitor.Exit(_lockObject);
 
         }
 

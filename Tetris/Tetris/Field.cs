@@ -133,9 +133,10 @@ namespace Tetris
             {
                 for (int y = 0; y < _height; y++)
                 {
-                    char sym = HeapPointBusy(x, y) ? '*' : ' ';
-                    Console.SetCursorPosition(x, y);
-                    Console.Write(sym);
+                    if (HeapPointBusy(x, y))
+                        DrawerProvider.Drawer.Draw(x, y, '*');
+                    else
+                        DrawerProvider.Drawer.Hide(x, y);
                 }
 
             }

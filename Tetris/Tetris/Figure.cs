@@ -149,8 +149,7 @@ namespace Tetris
             // "стираем" прежнее положение фигуры
             foreach (Point p in points)
             {
-                p.C = ' ';
-                p.Draw();
+               DrawerProvider.Drawer.Hide(p.X, p.Y);
 
             }
         }
