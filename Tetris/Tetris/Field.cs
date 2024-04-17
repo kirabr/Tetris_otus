@@ -9,16 +9,16 @@ namespace Tetris
     static class Field
     {
 
-        static private int _wight = 30;
+        static private int _widht = 30;
         static private int _height = 40;
-        static private bool[,] _heap = new bool[_height, _wight];
+        static private bool[,] _heap = new bool[_height, _widht];
 
         public static string Snapshot()
         {
             string snapshot = "Field snapshot";
 
             snapshot += "\n\n" + DateTime.Now.ToString() + "\n\n";
-            for (int y = 0; y < _wight; y++)
+            for (int y = 0; y < _widht; y++)
             {
                 for (int x = 0; x<_height; x++)
                 {
@@ -34,11 +34,11 @@ namespace Tetris
         {
             get
             {
-                return _wight;
+                return _widht;
             }
             set
             {
-                _wight = Math.Max(value, 1);
+                _widht = Math.Max(value, 1);
                 SetHeap();
                 SetConsoleParametres();
             }
@@ -59,13 +59,12 @@ namespace Tetris
 
         private static void SetHeap()
         {
-            _heap = new bool[_height, _wight];
+            _heap = new bool[_height, _widht];
         }
 
         private static void SetConsoleParametres()
         {
-            Console.SetWindowSize(_wight, _height);
-            Console.SetBufferSize(_wight, _height);
+            DrawerProvider.Drawer.FieldInit(_widht, _height);
         }
 
         public static void FinishFigure(Figure figure)
@@ -90,7 +89,7 @@ namespace Tetris
             {
                 // в каждой строке проверяем, полностью ли она заполнена
                 bool rowfill = true;
-                for (int x = 0; x < _wight; x++)
+                for (int x = 0; x < _widht; x++)
                 {
                     if (!HeapPointBusy(x, y))
                     {
@@ -120,7 +119,7 @@ namespace Tetris
         {
             for (int y = bottom; y > 0; y--)
             {
-                for (int x = 0; x < _wight; x++)
+                for (int x = 0; x < _widht; x++)
                 {
                     _heap[y, x] = _heap[y - 1, x];
                 }
@@ -129,12 +128,12 @@ namespace Tetris
 
         private static void Draw()
         {
-            for (int x = 0; x < _wight; x++)
+            for (int x = 0; x < _widht; x++)
             {
                 for (int y = 0; y < _height; y++)
                 {
                     if (HeapPointBusy(x, y))
-                        DrawerProvider.Drawer.Draw(x, y, '*');
+                        DrawerProvider.Drawer.Draw(x, y);
                     else
                         DrawerProvider.Drawer.Hide(x, y);
                 }

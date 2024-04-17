@@ -67,9 +67,7 @@ namespace Tetris
                     timer.Enabled = false;
                     timer.Dispose();
 
-                    Console.SetCursorPosition(0, 0);
-                    Console.WriteLine("Game over");
-                    Console.ReadLine();
+                    DrawerProvider.Drawer.GameOver();
 
                 }
 

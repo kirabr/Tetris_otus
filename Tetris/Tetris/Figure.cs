@@ -193,8 +193,6 @@ namespace Tetris
             // отрисовываем фигуру
             Draw();
 
-            Console.SetCursorPosition(0, 0);
-
         }
 
         public virtual void Rotate(RotateDirection rotateDirection)

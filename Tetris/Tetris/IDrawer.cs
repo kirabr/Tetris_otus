@@ -8,7 +8,9 @@ namespace Tetris
 {
     internal interface IDrawer
     {
-        void Draw(int x, int y, char sym);
+        void Draw(int x, int y);
         void Hide(int x, int y);
+        void FieldInit(int widht, int height);
+        void GameOver();
     }
 }
